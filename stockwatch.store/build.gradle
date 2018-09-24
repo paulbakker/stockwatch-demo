@@ -1,0 +1,14 @@
+dependencies {
+    compile project(":stockwatch.api")
+}
+
+ext.moduleName = 'stockwatch.store'
+compileJava {
+    inputs.property("moduleName", moduleName)
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath
+        ]
+        classpath = files()
+    }
+}

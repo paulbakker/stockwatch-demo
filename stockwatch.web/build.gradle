@@ -1,0 +1,36 @@
+plugins {
+    id 'application'
+}
+
+dependencies {
+    compile 'io.vertx:vertx-web:3.5.3'
+    compile project(':symbolfetch')
+    compile project(':stockwatch.api')
+    compile project(':stockwatch.cron')
+    runtime project(':stockwatch.store')
+}
+
+
+ext.moduleName = 'stockwatch.web'
+compileJava {
+    inputs.property("moduleName", moduleName)
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath
+        ]
+        classpath = files()
+    }
+}
+mainClassName = "$moduleName/codeone.stockwatch.web.Main"
+
+run {
+    doFirst {
+        jvmArgs = [
+                '--module-path', classpath.asPath,
+                '--module', mainClassName
+        ]
+
+        classpath = files()
+    }
+}
+

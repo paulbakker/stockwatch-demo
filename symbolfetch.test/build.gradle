@@ -1,0 +1,42 @@
+dependencies {
+    compile project(':symbolfetch')
+    compile 'org.junit.jupiter:junit-jupiter-api:5.2.0'
+    compile'org.junit.jupiter:junit-jupiter-params:5.2.0'
+    runtime 'org.junit.jupiter:junit-jupiter-engine:5.2.0'
+}
+
+ext.moduleName = 'symbolfetch.test'
+compileJava {
+    inputs.property("moduleName", moduleName)
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath
+        ]
+        classpath = files()
+    }
+}
+
+compileTestJava {
+    inputs.property("moduleName", moduleName)
+    options.compilerArgs = [
+            '--module-path', classpath.asPath,
+            '--add-modules', 'org.junit.jupiter.api',  // junit5 automatic module specific
+            '--add-reads', "$moduleName=org.junit.jupiter.api", // allow junit to read your module
+            '--patch-module', "$moduleName=" + files(sourceSets.test.java.srcDirs).asPath, // add codeone.symbolfetch.test source files to your module
+
+    ]
+    classpath = files()
+}
+
+test {
+    inputs.property("moduleName", moduleName)
+    doFirst {
+        jvmArgs = [
+                '--module-path', classpath.asPath,
+                '--add-modules', 'ALL-MODULE-PATH', // to resolve all module in the module path to be accessed by gradle codeone.symbolfetch.test runner
+                '--add-reads', "$moduleName=org.junit.jupiter.api",
+                '--patch-module', "$moduleName=" + files(sourceSets.test.java.outputDir).asPath,
+        ]
+        classpath = files()
+    }
+}

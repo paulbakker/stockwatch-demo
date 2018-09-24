@@ -1,0 +1,8 @@
+rootProject.name = 'codeone'
+include 'stockwatch.api'
+include 'symbolfetch'
+include 'symbolfetch.test'
+include 'stockwatch.web'
+include 'stockwatch.store'
+include 'stockwatch.cron'
+

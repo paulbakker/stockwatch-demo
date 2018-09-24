@@ -1,0 +1,17 @@
+ext.moduleName = 'stockwatch.cron'
+compileJava {
+    inputs.property("moduleName", moduleName)
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath
+        ]
+        classpath = files()
+    }
+}
+
+dependencies {
+    compile project(':stockwatch.api')
+    compile project(':symbolfetch')
+    compile 'org.slf4j:slf4j-api:1.7.25'
+    runtime 'org.slf4j:slf4j-simple:1.7.25'
+}
